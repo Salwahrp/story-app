@@ -10,49 +10,49 @@
   "scope": "/",
   "icons": [
     {
-      "src": "/assets/icon-72.png",
+      "src": "/story-app/assets/icon-72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-96.png",
+      "src": "/story-app/assets/icon-96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-128.png",
+      "src": "/story-app/assets/icon-128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-144.png",
+      "src": "/story-app/assets/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-152.png",
+      "src": "/story-app/assets/icon-152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-192.png",
+      "src": "/story-app/assets/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-384.png",
+      "src": "/story-app/assets/icon-384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/assets/icon-512.png",
+      "src": "/story-app/assets/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -60,7 +60,7 @@
   ],
   "screenshots": [
     {
-      "src": "/assets/screenshot1.png",
+      "src": "/story-app/assets/screenshot1.png",
       "sizes": "1280x720",
       "type": "image/png"
     }
@@ -71,7 +71,7 @@
       "short_name": "Add",
       "description": "Add a new story",
       "url": "/#/add-story",
-      "icons": [{ "src": "/assets/icon-96.png", "sizes": "96x96" }]
+      "icons": [{ "src": "/story-app/assets/icon-96.png", "sizes": "96x96" }]
     }
   ]
 }
