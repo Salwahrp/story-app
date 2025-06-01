@@ -1,22 +1,20 @@
 {
   "name": "story-app",
   "version": "1.0.0",
-  "description": "Story Sharing Application",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "start": "http-server -c-1 -p 8080",
-    "build": "workbox generateSW workbox-config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "workbox-cacheable-response": "^6.5.4",
-    "workbox-core": "^6.5.4",
-    "workbox-expiration": "^6.5.4",
-    "workbox-precaching": "^6.5.4",
-    "workbox-routing": "^6.5.4",
-    "workbox-strategies": "^6.5.4"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Salwahrp/story-app.git"
   },
-  "devDependencies": {
-    "http-server": "^14.1.1",
-    "workbox-cli": "^6.6.0"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Salwahrp/story-app/issues"
+  },
+  "homepage": "https://github.com/Salwahrp/story-app#readme"
 }
