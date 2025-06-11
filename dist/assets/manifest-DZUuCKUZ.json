@@ -70,7 +70,7 @@
       "name": "Add Story",
       "short_name": "Add",
       "description": "Add a new story",
-      "url": "/#/add-story",
+      "url": "/story-app/add-story",
       "icons": [{ "src": "/story-app/assets/icon-96.png", "sizes": "96x96" }]
     }
   ]
