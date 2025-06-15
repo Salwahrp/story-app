@@ -3,6 +3,7 @@ import StoryPresenter from './presenters/story-presenter.js';
 import AddStoryPresenter from './presenters/add-story-presenter.js';
 import LoginPresenter from './presenters/login-presenter.js';
 import RegisterPresenter from './presenters/register-presenter.js';
+import HistoryPresenter from './presenters/history-presenter.js';
 import AuthManager from './models/auth-manager.js';
 
 class App {
@@ -67,6 +68,8 @@ class App {
         presenter = new LoginPresenter();
       } else if (hash === '#/register') {
         presenter = new RegisterPresenter();
+      } else if (hash === '#/history') {
+        presenter = new HistoryPresenter();
       } else {
         // Handle 404
         document.getElementById('view-container').innerHTML = '<h2>Page Not Found</h2>';

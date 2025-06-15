@@ -10,6 +10,17 @@ class HomePresenter {
   constructor() {
     this.view = new HomeView();
     this.stories = [];
+    this.savedStoryIds = new Set();
+    this.loadSavedStoryIds();
+  }
+
+  async loadSavedStoryIds() {
+    try {
+      const savedStories = await IDBManager.getStories();
+      this.savedStoryIds = new Set(savedStories.map(story => story.id));
+    } catch (error) {
+      console.error('Error loading saved story IDs:', error);
+    }
   }
 
   async showView(container) {
@@ -39,10 +50,8 @@ class HomePresenter {
       
       this.stories = response.listStory;
       
-      // Save stories to IndexedDB for offline use
-      await this.saveStoriesToIDB(this.stories);
-      
-      this.view.displayStories(this.stories);
+      // Display stories without automatically saving to IndexedDB
+      this.view.displayStories(this.stories, this.savedStoryIds);
     } catch (error) {
       console.error('Online fetch failed, trying IndexedDB:', error);
       
@@ -52,7 +61,7 @@ class HomePresenter {
         
         if (offlineStories && offlineStories.length > 0) {
           this.stories = offlineStories;
-          this.view.displayStories(offlineStories);
+          this.view.displayStories(offlineStories, this.savedStoryIds);
           this.view.showOfflineWarning();
         } else {
           this.view.showError('Unable to load stories. Please check your connection and login status.');
@@ -64,20 +73,7 @@ class HomePresenter {
     }
     
     this.setupEventListeners();
-  }
-
-  async saveStoriesToIDB(stories) {
-    try {
-      // Clear old stories
-      await IDBManager.clearAllData();
-      
-      // Save new stories
-      for (const story of stories) {
-        await IDBManager.saveStory(story);
-      }
-    } catch (error) {
-      console.error('Error saving stories to IndexedDB:', error);
-    }
+    this.view.setupEventListeners();
   }
 
   setupEventListeners() {
@@ -90,11 +86,41 @@ class HomePresenter {
       try {
         const stories = await ApiClient.getStories();
         this.stories = stories;
-        await this.saveStoriesToIDB(stories);
-        this.view.displayStories(stories);
+        await this.loadSavedStoryIds();
+        this.view.displayStories(stories, this.savedStoryIds);
       } catch (error) {
         this.view.showError('Failed to refresh. Please check your connection.');
       }
+    };
+
+    // Add handler for saving stories to history
+    this.view.onSaveToHistory = async (story) => {
+      try {
+        await IDBManager.saveStory(story);
+        this.savedStoryIds.add(story.id);
+        // Show success message
+        const saveButton = document.querySelector(`[data-story-id="${story.id}"]`);
+        if (saveButton) {
+          saveButton.textContent = 'Saved!';
+          saveButton.disabled = true;
+        }
+      } catch (error) {
+        console.error('Error saving story to history:', error);
+        // Show error message
+        const saveButton = document.querySelector(`[data-story-id="${story.id}"]`);
+        if (saveButton) {
+          const originalText = saveButton.textContent;
+          saveButton.textContent = 'Error saving';
+          setTimeout(() => {
+            saveButton.textContent = originalText;
+          }, 2000);
+        }
+      }
+    };
+
+    // Add handler for viewing history
+    this.view.onViewHistory = () => {
+      window.location.hash = '#/history';
     };
   }
 

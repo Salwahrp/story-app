@@ -27,5 +27,13 @@
   "main": "sw.js",
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Salwahrp/story-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Salwahrp/story-app/issues"
+  },
+  "homepage": "https://github.com/Salwahrp/story-app#readme"
 }

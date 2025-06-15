@@ -6,6 +6,8 @@ class HomeView {
       this.onNextPage = null;
       this.onPrevPage = null;
       this.onAddStoryClick = null;
+      this.onSaveToHistory = null;
+      this.onViewHistory = null;
     }
   
     createViewElement() {
@@ -13,7 +15,10 @@ class HomeView {
       element.className = 'home-view';
           
       element.innerHTML = `
-        <h2>Latest Stories</h2>
+        <div class="header-actions">
+          <h2>Latest Stories</h2>
+          <button class="view-history-btn">View Saved History</button>
+        </div>
         <div class="stories-container"></div>
         <div class="pagination">
           <button class="prev-btn">Previous</button>
@@ -29,7 +34,7 @@ class HomeView {
       return this.element;
     }
   
-    displayStories(stories) {
+    displayStories(stories, savedStoryIds = new Set()) {
       const container = this.element.querySelector('.stories-container');
       container.innerHTML = '';
       
@@ -51,6 +56,8 @@ class HomeView {
         const storyElement = document.createElement('div');
         storyElement.className = 'story-card';
         
+        const isSaved = savedStoryIds.has(story.id); // Check if story is already saved
+        
         // Handle missing/undefined properties safely
         storyElement.innerHTML = `
           <img src="${story.photoUrl || './public/fallback-image.png'}" 
@@ -60,11 +67,23 @@ class HomeView {
           <h3>${story.name || 'Untitled Story'}</h3>
           <p>${story.description ? story.description.substring(0, 100) + '...' : 'No description'}</p>
           <small>${story.createdAt ? new Date(story.createdAt).toLocaleDateString() : 'Unknown date'}</small>
+          <button class="save-to-history-btn" data-story-id="${story.id}" ${isSaved ? 'disabled' : ''}>Save to History</button>
         `;
         
-        storyElement.addEventListener('click', () => {
+        // Add click event for the story
+        storyElement.querySelector('.story-image').addEventListener('click', () => {
           if (this.onStoryClick) this.onStoryClick(story.id);
         });
+        
+        // Add click event for the save button
+        const saveButton = storyElement.querySelector('.save-to-history-btn');
+        // Only add listener if not already saved
+        if (!isSaved) {
+          saveButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent story click event
+            if (this.onSaveToHistory) this.onSaveToHistory(story);
+          });
+        }
         
         container.appendChild(storyElement);
       });
@@ -105,7 +124,14 @@ class HomeView {
       element.appendChild(warningDiv);
     }
 
-
+    setupEventListeners() {
+      const viewHistoryBtn = this.element.querySelector('.view-history-btn');
+      if (viewHistoryBtn) {
+        viewHistoryBtn.addEventListener('click', () => {
+          if (this.onViewHistory) this.onViewHistory();
+        });
+      }
+    }
   }
   
   export default HomeView;
