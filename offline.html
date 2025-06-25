@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - Story Sharing App</title>
+    <link rel="stylesheet" href="src/styles/main.css">
+    <style>
+        .offline-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .offline-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .offline-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .offline-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .offline-message {
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .retry-button {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .retry-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .retry-button:active {
+            transform: translateY(0);
+        }
+        .connection-status {
+            margin-top: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-card">
+            <div class="offline-icon">📶</div>
+            <h1 class="offline-title">You're Offline</h1>
+            <p class="offline-message">
+                It looks like you've lost your internet connection. 
+                Don't worry, you can still view your saved stories!
+            </p>
+            <button class="retry-button" onclick="checkConnection()">Check Connection</button>
+            <div class="connection-status" id="status">Checking connection...</div>
+        </div>
+    </div>
+
+    <script>
+        function checkConnection() {
+            const statusElement = document.getElementById('status');
+            statusElement.textContent = 'Checking connection...';
+            
+            // Try to fetch a small resource to test connection
+            fetch('/story-app/assets/icon-192.png', { 
+                method: 'HEAD',
+                cache: 'no-cache'
+            })
+            .then(() => {
+                statusElement.textContent = 'Connection restored! Redirecting...';
+                setTimeout(() => {
+                    window.location.href = '/story-app/';
+                }, 1000);
+            })
+            .catch(() => {
+                statusElement.textContent = 'Still offline. Please check your internet connection.';
+            });
+        }
+
+        // Auto-check connection every 5 seconds
+        setInterval(checkConnection, 5000);
+
+        // Check connection on page load
+        window.addEventListener('load', checkConnection);
+    </script>
+</body>
+</html> 
