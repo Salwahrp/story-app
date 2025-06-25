@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story Sharing App</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="manifest" href="/story-app/assets/manifest-PlDp69bP.json">
+    <meta name="theme-color" content="#2c3e50">
+    <link rel="apple-touch-icon" href="src/assets/icon-192.png">
+    <meta name="apple-mobile-web-app-status-bar" content="#2c3e50">
+    <style>
+        #install-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: block;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        #install-button:hover {
+            background-color: #34495e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        #install-button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        @media (display-mode: standalone) {
+            #install-button {
+                display: none !important;
+            }
+        }
+    </style>
+  <script type="module" crossorigin src="/story-app/assets/index-CkhHI32b.js"></script>
+  <link rel="stylesheet" crossorigin href="/story-app/assets/index-SkdjAW8O.css">
+</head>
+<body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <button id="install-button" aria-label="Install Story App">
+        <span>📱 Install App</span>
+    </button>
+
+    <header class="app-header">
+        <h1>Story Sharing</h1>
+        <nav class="navigation">
+            <ul>
+                <li><a href="#/home">Home</a></li>
+                <li><a href="#/add-story">Add Story</a></li>
+                <li><a href="#/login" id="login-nav">Login</a></li>
+                <li><a href="#/register" id="register-nav">Register</a></li>
+                <li><a href="#" id="logout-nav" style="display: none;">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <div id="view-container"></div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/story-app/sw.js')
+                    .then(registration => {
+                        console.log('SW registered:', registration);
+                        
+                        // Handle updates
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    // New version available
+                                    if (confirm('New version available! Reload to update?')) {
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.error('SW registration failed:', err);
+                    });
+
+                // Handle controller change
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        window.location.reload();
+                    }
+                });
+            });
+        }
+    </script>
+    <script>
+      let deferredPrompt;
+      const installBtn = document.getElementById('install-button');
+
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+      });
+
+      installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          if (outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+        } else {
+          alert('To install this app, use your browser menu and select "Add to Home screen" or "Install App".');
+        }
+      });
+
+      window.addEventListener('appinstalled', () => {
+        installBtn.style.display = 'none';
+      });
+    </script>
+</body>
+</html>
